@@ -1495,6 +1495,7 @@
       const targetForm = params.get('form'); 
       if (!targetForm) return;
 
+      // 1. Abre o formulário correto
       const menuOption = document.querySelector(`.custom-dropdown-option[data-value="${targetForm}"]`);
       if (menuOption) menuOption.click(); else return;
 
@@ -1502,6 +1503,7 @@
       const activeForm = document.getElementById(`form-${targetForm}`);
       if (!activeForm) return;
 
+      // 2. Preenche Nicknames
       const nicksParam = params.get('nicks') || params.get('nickname');
       if (nicksParam) {
           const inputMap = { 'entrada': 'entrada-nick-input', 'saida': 'saida-nickname-input', 'expulsao': 'expulsao-nickname-input', 'promocao': 'promocao-nick-input', 'advertencia': 'advertencia-nick-input' };
@@ -1517,9 +1519,40 @@
           }
       }
 
+      // 3. Lógica para ativar os Toggles (DA e Subgrupos) via Link
+      // Para o DA (Formulário Entrada) -> use &da=true
+      if (targetForm === 'entrada' && params.get('da') === 'true') {
+          const daCheck = document.getElementById('check-membro-da');
+          if (daCheck && !daCheck.checked) {
+              daCheck.click(); // Simula o clique para ativar visual e lógica
+          }
+      }
+
+      // Para Subgrupos (Licença, Retorno, Prolongamento) -> use &subgrupos=true
+      if (['licenca', 'retorno_licenca', 'prolongamento'].includes(targetForm) && params.get('subgrupos') === 'true') {
+          const subCheck = activeForm.querySelector('.subgroup-toggle-checkbox');
+          if (subCheck && !subCheck.checked) {
+              subCheck.click(); // Ativa o toggle
+          }
+          
+          // Opcional: Se quiser já selecionar os grupos via link (ex: &grupos=DA,DM)
+          const gruposParam = params.get('grupos');
+          if (gruposParam) {
+              await new Promise(r => setTimeout(r, 300)); // Pequeno delay para a animação abrir
+              const grupos = gruposParam.split(',');
+              grupos.forEach(g => {
+                  const btn = activeForm.querySelector(`.subgroup-selection-btn[data-group="${g.toUpperCase()}"]`);
+                  if (btn && !btn.classList.contains('selected')) {
+                      btn.click();
+                  }
+              });
+          }
+      }
+
+      // 4. Preenche os demais campos
       const fillFields = () => {
           params.forEach((value, key) => {
-              if (['form', 'nicks', 'nickname', 'nicknames'].includes(key)) return; 
+              if (['form', 'nicks', 'nickname', 'nicknames', 'da', 'subgrupos', 'grupos'].includes(key)) return; 
               const field = activeForm.querySelector(`[name="${key}"]`);
               if (field) {
                   const decodedValue = decodeURIComponent(value);
