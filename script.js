@@ -64,9 +64,8 @@
 
     // --- FUNÇÕES GERAIS PARA SUBGRUPOS (Licença, Retorno, Prolongamento) ---
     function toggleSubgroupOptions(checkbox) {
-        // Encontra o wrapper pai (para estilo) e o container de opções (próximo irmão ou via classe)
+        // Encontra o wrapper pai e o container de opções dentro do mesmo formulário
         const wrapper = checkbox.closest('.da-toggle-wrapper');
-        // Busca o container dentro do mesmo formulário
         const form = checkbox.closest('form');
         const container = form.querySelector('.subgroup-options-wrapper');
 
@@ -79,27 +78,28 @@
             container.classList.add('opacity-0');
             setTimeout(() => container.classList.add('hidden'), 300);
             
-            // Resetar seleções ao fechar dentro deste formulário
+            // Resetar seleções ao fechar
             container.querySelectorAll('.subgroup-selection-btn').forEach(btn => btn.classList.remove('selected'));
-            container.querySelector('.subgroup-permissions-list').innerHTML = '';
+            const list = container.querySelector('.subgroup-permissions-list');
+            if(list) list.innerHTML = '';
         }
     }
 
     function toggleSubgroupSelection(btn) {
         btn.classList.toggle('selected');
         const group = btn.dataset.group; // DA, DRI, DM
-        
-        // Encontra o formulário pai para verificar se é RETORNO
         const form = btn.closest('form');
-        const isRetorno = form.id === 'form-retorno_licenca';
+        
+        // CORREÇÃO: Apenas 'form-licenca' exige inputs de permissão extras.
+        // Retorno e Prolongamento não pedem.
+        const shouldShowInput = (form.id === 'form-licenca'); 
 
-        // Se for retorno, apenas toggle a classe selected (visual), não cria input
-        if (isRetorno) return;
+        // Se não precisar de input (ex: retorno), para por aqui (apenas seleção visual)
+        if (!shouldShowInput) return;
 
-        // Encontra a lista de permissões DENTRO do container atual
         const optionsWrapper = btn.closest('.subgroup-options-wrapper');
         const container = optionsWrapper.querySelector('.subgroup-permissions-list');
-        const inputId = `perm-group-${group}`; // ID único no contexto da lista
+        const inputId = `perm-group-${group}`;
 
         if (btn.classList.contains('selected')) {
             // Criar campo de permissão dinâmico e minimalista
@@ -118,7 +118,7 @@
             `;
             container.appendChild(wrapper);
         } else {
-            // Remover campo se desmarcado (procura pelo ID dentro do container)
+            // Remover campo se desmarcado
             const el = container.querySelector(`#${inputId}`);
             if(el) {
                 el.style.opacity = '0';
