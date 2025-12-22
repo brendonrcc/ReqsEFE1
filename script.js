@@ -1,9 +1,9 @@
-// --- CONFIGURAÇÃO PRINCIPAL ---
+ // --- CONFIGURAÇÃO PRINCIPAL ---
     const CONFIG = { 
         mainTopicId: 1, 
-        topicDA: 2,  // Tópico do Departamento de Aplicação
-        topicDRI: 3, // Tópico do Departamento de Relações Internacionais
-        topicDM: 4,  // Tópico do Departamento Militar
+        topicDA: 2, 
+        topicDRI: 3,
+        topicDM: 4,  
         sheetUrl: "https://script.google.com/macros/s/AKfycbxxFGcukrz75Y80Dvlawthnbx1QnUUy-keqR6KAlNxQXeeUujKPi982bPTXlbyYfsIxuQ/exec",
         daSheetUrl: "https://script.google.com/macros/s/AKfycbw-NBtKacudTTa5aH-BhF_foiGa8_4IrWVtS8zVq7b8j0PkA8r-o8JaAUw5SrazJAFu/exec" 
     };
@@ -791,7 +791,7 @@
     }
 
     function generateSingleBBCode(title, content) {
-        return `[center][b][size=16]${title}[/size][/b][/center]\n\n${content}`;
+        return `[table style="width: 30%; border: none!important; overflow: hidden; border-radius: 7px; left: 18em; position: relative;  z-index: 2"][tr style="border: none !important;"][td style="border: none!important; padding: 12px"][img(42px,42px)]https://i.imgur.com/U9aXSQB.png[/img][/td][/tr][/table]\n\n [center][table style="width: 20%; border: none!important; overflow: hidden; border-radius: 7px; margin-top: -5.6em; position: relative; font-family: 'Poppins', sans-serif; color: #ffffff; z-index: 1" bgcolor="79a8c3"][tr style="border: none !important;"][td style="border: none!important; padding: 12px"][b]${title}[/b][/td][/tr][/table][/center]\n\n${content}`;
     }
 
     function generatePostQueue(formId, formData, formElement) {
@@ -803,15 +803,17 @@
 
         if (formId === 'form-atualizacao') {
              const tag = formData.get('nickname') || "Atualização";
-             const bbcode = `[font=Poppins][center][table style="border: none!important; overflow: hidden; border-radius: 15px; line-height: 1em; width: 65%" bgcolor="93b8d3"]` +
-                    `[tr style="border: none!important; overflow: hidden"]` +
-                    `[td style="border: none!important; overflow: hidden"]` +
-                    `[img(18px,18px)]https://2img.net/i.imgur.com/qmLa772.png[/img]\n\n` +
-                    `[img]https://2img.net/i.imgur.com/qz9m2VC.png[/img]\n` +                    
-                    `[color=white][size=18][b][EFE] Atualização realizada! [${tag}] [/size][/b]\n` +
-                    `[size=11]Em caso de dúvidas ou erros, entre em contato com um Estagiário+ da companhia.[/color][/size]\n\n`+
-                    `[url=https://www.policiarcc.com/t31424-efe-lista-de-membros][size=11][b][color=white]ACESSAR A LISTAGEM DE MEMBROS[/color][/b][/size][/url]\n` +
-                    `[/td][/tr][/table][/center][/font]`;
+             const bbcode = `[center][img(70px,70px)]https://i.imgur.com/U9aXSQB.png[/img][/center]\n\n` +
+                    `[table style="width: 30%; border: none!important; overflow: hidden; border-radius: 7px; position: relative; margin: auto; bottom: 3.2em; font-family: 'Poppins', sans-serif; color: #ffffff; box-shadow: 0 4px 12px rgba(93, 142, 163, 0.4); z-index: 2" bgcolor="79a8c3"]` +
+                    `[tr style="border: none !important;"]` +
+                    `[td style="border: none!important; padding: 8px"]` +               
+                    `[b][EFE] Atualização realizada! [${tag}][/b][/td][/tr][/table]\n\n` +
+                    `[table style="width: 23%; border: none!important; overflow: hidden; border-radius: 0 0 5px 5px; position: relative; margin: auto; bottom: 4.6em; font-family: 'Poppins', sans-serif; color: #ffffff; box-shadow: 0 4px 12px rgba(93, 142, 163, 0.4); z-index: 2" bgcolor="5A7D91"]` +
+                    `[tr style="border: none !important;"]` +
+                    `[tr style="border: none !important;"]` +
+                    `[td style="border: none!important; padding: 5px"]` +
+                    `[url=https://www.policiarcc.com/t31424-efe-lista-de-membros][size=9][color=white]ACESSAR A LISTAGEM DE MEMBROS[/color][/size][/url]` +
+                    `[/td][/tr][/table]`;
              queue.push({ id: 'atualizacao', bbcode });
              return queue;
         }
@@ -888,7 +890,7 @@
             if (formId === 'form-entrada' || formId === 'form-reintegracao') {
                 let finalContent = `[b]Nickname(s):[/b] ${nick}\n`;
                 if(formId === 'form-reintegracao') {
-                     finalContent += `[b]Necessita Graduação:[/b] ${formData.get('graduacao')}\n`;
+                     finalContent += `[b]Graduação:[/b] ${formData.get('graduacao')}\n`;
                      title = "Reintegração";
                 }
                 finalContent += `[b]Data:[/b] ${todayStr}\n`;
@@ -948,7 +950,7 @@
                         finalContent += `[b]Retorno em:[/b] ${dataRetornoStr}\n`;
                         finalContent += `[b]Permissão:[/b] ${permissao}\n`;
                     } else if (formId === 'form-retorno_licenca') {
-                        finalContent += `[b]Data:[/b] ${todayStr}\n`;
+                        finalContent += `[b]Data:/b] ${todayStr}\n`;
                     } else {
                         finalContent += commonPart;
                         finalContent += `[b]Data:[/b] ${todayStr}\n`;
@@ -974,7 +976,7 @@
         let text = "";
         if (formId === 'form-transferencia') text += `[b]Nickname Atual:[/b] ${formData.get('nickname_atual')}\n[b]Novo Nickname:[/b] ${formData.get('nickname_novo')}\n`;
         else if (formId === 'form-migracao') text += `[b]Para:[/b] ${formData.get('corpo_destino')}\n`;
-        else if (formId === 'form-prolongamento') text += `[b]Dias Adicionais:[/b] ${formData.get('dias')}\n`;
+        else if (formId === 'form-prolongamento') text += `[b]Dias:[/b] ${formData.get('dias')}\n`;
         return text;
     }
 
@@ -1053,7 +1055,8 @@
                 groups[gId].forEach(nick => {
                     const safeNick = nick.replace(/[^a-zA-Z0-9]/g, '_');
                     const comp = formData.get(`comprovacoes_g${gId}_${safeNick}`) || "";
-                    rows.push([timestamp, tipo, nick, novoCargo, motivo, data, comp]);
+                    // ATUALIZADO: Inclui Cargo Atual e Novo Cargo
+                    rows.push([timestamp, tipo, nick, cargoAtual, novoCargo, motivo, data, comp]);
                 });
             });
 
@@ -1230,6 +1233,7 @@
             const newRank = hierarchy[novoCargo] || 0;
 
             if (newRank < oldRank) {
+                // Rebaixamento (Punição) -> Envia MP
                 githubUrl = MP_LINKS.punicao;
                 subject = "[EFE] Rebaixamento";
                 const motivo = formElement.querySelector(`[name="motivo_g${gId}"]`)?.value || "";
@@ -1241,22 +1245,17 @@
                 replacements['{termino}'] = dataTerminoStr;
 
             } else {
-                subject = "[EFE] Promoção";
-                if (cargoAtual === "Professor(a)" && novoCargo === "Mentor(a)") githubUrl = MP_LINKS.promo_mentor;
-                else if (cargoAtual === "Mentor(a)" && novoCargo === "Capacitador(a)") githubUrl = MP_LINKS.promo_cap;
-                else if (cargoAtual === "Capacitador(a)" && novoCargo === "Graduador(a)") githubUrl = MP_LINKS.promo_grad;
-                else if (cargoAtual === "Graduador(a)" && novoCargo === "Estagiário(a)") githubUrl = MP_LINKS.promo_est;
-                else if (cargoAtual === "Estagiário(a)" && novoCargo === "Ministro") githubUrl = MP_LINKS.promo_min;
-                else return null; 
+                // Promoção -> NÃO Envia MP
+                return null;
             }
         }
         else if (formId === 'form-entrada' || formId === 'form-reintegracao') {
              githubUrl = MP_LINKS.entrada;
-             subject = "[EFE] Entrada/Reintegração";
+             subject = "[EFE] Entrada";
         }
         else if (formId === 'form-saida') {
-             githubUrl = MP_LINKS.saida;
-             subject = "[EFE] Saída";
+             // Saída -> NÃO Envia MP
+             return null;
         }
         else {
             return null;
@@ -1366,13 +1365,12 @@
 
                 handlePunishmentTabs(form.id, form);
                 
-                // 2. MPs (GitHub Content)
+                // 2. MPs (GitHub Content) - ATUALIZADO: Não envia para Saída/Promoção
                 const mpForms = ['form-entrada', 'form-saida', 'form-expulsao', 'form-promocao', 'form-advertencia', 'form-reintegracao'];
                 
                 if (mpForms.includes(form.id)) {
-                    btnText.textContent = "PROCESSANDO MP'S...";
+                    // Prepara a lista de nicks
                     let nicksToSend = [];
-
                     if (['form-saida', 'form-expulsao', 'form-promocao', 'form-advertencia'].includes(form.id)) {
                         const chips = Array.from(form.querySelector('.nickname-chips-container').children);
                         nicksToSend = chips.map(c => c.dataset.nick);
@@ -1380,17 +1378,29 @@
                         const rawNick = formData.get('nickname');
                         if (rawNick) nicksToSend = rawNick.split('/').map(n => n.trim()).filter(n => n);
                     }
-
+                    
+                    // Verifica se realmente tem que enviar MP (Para Promoção e Saída, prepareMPData retorna null)
+                    let shouldShowLoading = false;
                     for (let i = 0; i < nicksToSend.length; i++) {
-                        const nick = nicksToSend[i];
-                        btnText.textContent = `MP (${i+1}/${nicksToSend.length}): ${nick}`;
+                        const template = await prepareMPData(form.id, nicksToSend[i], formData, form);
+                        if(template) {
+                             shouldShowLoading = true;
+                             break;
+                        }
+                    }
 
-                        const template = await prepareMPData(form.id, nick, formData, form);
-                        
-                        if (template) {
-                            const success = await sendPrivateMessage(nick, template.subject, template.message);
-                            if (!success) showToast("Erro MP", `Falha ao enviar para ${nick}.`, "danger", 3000);
-                            if (i < nicksToSend.length - 1) await delay(MP_DELAY); 
+                    if(shouldShowLoading) {
+                        btnText.textContent = "PROCESSANDO MP'S...";
+                        for (let i = 0; i < nicksToSend.length; i++) {
+                            const nick = nicksToSend[i];
+                            const template = await prepareMPData(form.id, nick, formData, form);
+                            
+                            if (template) {
+                                btnText.textContent = `MP (${i+1}/${nicksToSend.length}): ${nick}`;
+                                const success = await sendPrivateMessage(nick, template.subject, template.message);
+                                if (!success) showToast("Erro MP", `Falha ao enviar para ${nick}.`, "danger", 3000);
+                                if (i < nicksToSend.length - 1) await delay(MP_DELAY); 
+                            }
                         }
                     }
                 }
