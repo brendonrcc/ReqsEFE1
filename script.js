@@ -431,7 +431,7 @@
         } catch (e) { console.error(e); }
     }
 
-    async function verifyAndAddNickname(inputId, chipsContainerId, hiddenInputId, containerId, limit = 99, enableGroups = false) {
+async function verifyAndAddNickname(inputId, chipsContainerId, hiddenInputId, containerId, limit = 99, enableGroups = false) {
         const input = document.getElementById(inputId);
         const btn = input.nextElementSibling;
         const rawValue = input.value.trim();
@@ -456,18 +456,13 @@
             for (let segment of segments) {
                 let nick = segment;
                 let targetGroup = 1;
+                const groupMatch = segment.match(/^(.*):([1-4])$/);
 
-                // Lógica de grupo (ex: Nick:2)
-                if (segment.includes(':')) {
-                    const parts = segment.split(':');
-                    nick = parts[0].trim();
-                    const parsedGroup = parseInt(parts[1]);
-                    if (!isNaN(parsedGroup) && parsedGroup >= 1 && parsedGroup <= 4) {
-                        targetGroup = parsedGroup;
-                    }
-                }
+                if (groupMatch) {
+                    nick = groupMatch[1].trim(); // O nickname real
+                    targetGroup = parseInt(groupMatch[2]); // O número do grupo
+                } 
 
-                // Codifica o nick para garantir que pontuações e caracteres especiais passem na URL
                 const encodedNick = encodeURIComponent(nick);
 
                 try {
@@ -476,35 +471,32 @@
                     if (response.ok) {
                         const data = await response.json();
                         if (data.uniqueId) {
-                            // Encontrou: usa o nome formatado da API
                             if (addChip(data.name, chipsContainerId, hiddenInputId, containerId, limit, enableGroups, targetGroup)) {
                                 addedCount++;
                             }
                         }
                     } else {
-                        // Não encontrou na API (404) ou erro: Adiciona mesmo assim e avisa
+
                         if (addChip(nick, chipsContainerId, hiddenInputId, containerId, limit, enableGroups, targetGroup)) {
                             addedCount++;
-                            showToast("Aviso", `Usuário <b>${nick}</b> não encontrado na API, mas foi adicionado manualmente.`, "warning", 5000);
+                            showToast("Aviso", `Usuário <b>${nick}</b> não encontrado na API, mas foi adicionado.`, "warning", 5000);
                         }
                     }
                 } catch (innerError) {
-                    // Erro na requisição específica (ex: falha de rede momentânea), adiciona forçado
                      if (addChip(nick, chipsContainerId, hiddenInputId, containerId, limit, enableGroups, targetGroup)) {
                         addedCount++;
-                        showToast("Aviso", `Erro ao verificar <b>${nick}</b>, mas foi adicionado.`, "warning", 4000);
+                        showToast("Aviso", `Erro de conexão ao verificar <b>${nick}</b>. Adicionado manualmente.`, "warning", 4000);
                     }
                 }
             }
 
             if (addedCount > 0) {
                 input.value = '';
-                // Se todos foram sucesso puro, toast verde, se teve aviso, o toast de aviso já apareceu
                 if(!document.querySelector('.toast-enter')) {
                     showToast("Sucesso", `${addedCount} Nickname(s) processado(s).`, "info", 3000);
                 }
             } else if (segments.length > 0) {
-                showToast("Aviso", "Nenhum nickname foi adicionado (duplicados ou limite atingido).", "warning", 3000);
+                showToast("Aviso", "Nenhum nickname foi adicionado (duplicados ou limite).", "warning", 3000);
             }
         } catch (error) {
             console.error(error);
